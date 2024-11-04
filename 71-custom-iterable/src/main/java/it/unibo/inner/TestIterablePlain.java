@@ -1,6 +1,7 @@
 package it.unibo.inner;
 
 import it.unibo.inner.api.IterableWithPolicy;
+import it.unibo.inner.impl.IterablePlainImpl;
 
 import java.util.List;
 
@@ -8,17 +9,19 @@ import static it.unibo.inner.test.Assertions.assertContentEqualsInOrder;
 
 public class TestIterablePlain {
 
-    private TestIterablePlain() {}
+    private TestIterablePlain() {
+    }
 
     private static <T> IterableWithPolicy<T> getIterableWithPolicy(T[] elements) {
-        return null; // TODO: return the implementation of IterableWithPolicy
+        return new IterablePlainImpl<T>(elements);
     }
 
     public static void main(final String[] args) {
         String[] test1 = { "pippo", "pluto", "paperino" };
 
         IterableWithPolicy<String> evenIterable = getIterableWithPolicy(test1);
-        assertContentEqualsInOrder(evenIterable, List.of("pippo", "pluto", "paperino"));
+        assertContentEqualsInOrder(evenIterable, List.of("pippo", "pluto",
+                "paperino"));
 
         String[] test2 = {};
 
