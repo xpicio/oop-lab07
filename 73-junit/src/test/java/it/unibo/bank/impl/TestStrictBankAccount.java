@@ -5,14 +5,21 @@ import it.unibo.bank.api.BankAccount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Assertions;
 
 /**
  * Test class for the {@link StrictBankAccount} class.
  */
 class TestStrictBankAccount {
+    private static final double INITIAL_AMOUNT = 2;
+    private static final double DEPOSIT_AMOUNT = 100;
+    private static final double NEGATIVE_AMOUNT = -33;
+    private static final double WITHDRAW_AMOUNT = 5;
 
-    // Create a new AccountHolder and a StrictBankAccount for it each time tests are executed.
+    // Create a new AccountHolder and a StrictBankAccount for it each time tests are
+    // executed.
     private AccountHolder mRossi;
     private BankAccount bankAccount;
 
@@ -21,7 +28,8 @@ class TestStrictBankAccount {
      */
     @BeforeEach
     public void setUp() {
-        fail("To be implemented");
+        mRossi = new AccountHolder("Mario", "Rossi", 1);
+        bankAccount = new StrictBankAccount(mRossi, INITIAL_AMOUNT);
     }
 
     /**
@@ -29,15 +37,26 @@ class TestStrictBankAccount {
      */
     @Test
     public void testInitialization() {
-        fail("To be implemented");
+        assertEquals(INITIAL_AMOUNT, bankAccount.getBalance());
+        assertEquals(0, bankAccount.getTransactionsCount());
+        assertEquals(mRossi, bankAccount.getAccountHolder());
     }
 
     /**
-     * Perform a deposit of 100€, compute the management fees, and check that the balance is correctly reduced.
+     * Perform a deposit of 100€, compute the management fees, and check that the
+     * balance is correctly reduced.
      */
     @Test
     public void testManagementFees() {
-        fail("To be implemented");
+        double balanceBeforeDeposit = bankAccount.getBalance();
+
+        bankAccount.deposit(mRossi.getUserID(), DEPOSIT_AMOUNT);
+        bankAccount.chargeManagementFees(mRossi.getUserID());
+
+        assertEquals(
+                balanceBeforeDeposit + DEPOSIT_AMOUNT - StrictBankAccount.TRANSACTION_FEE
+                        - StrictBankAccount.MANAGEMENT_FEE,
+                bankAccount.getBalance());
     }
 
     /**
@@ -45,7 +64,9 @@ class TestStrictBankAccount {
      */
     @Test
     public void testNegativeWithdraw() {
-        fail("To be implemented");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            bankAccount.withdraw(mRossi.getUserID(), NEGATIVE_AMOUNT);
+        });
     }
 
     /**
@@ -53,6 +74,8 @@ class TestStrictBankAccount {
      */
     @Test
     public void testWithdrawingTooMuch() {
-        fail("To be implemented");
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            bankAccount.withdraw(mRossi.getUserID(), WITHDRAW_AMOUNT);
+        });
     }
 }
